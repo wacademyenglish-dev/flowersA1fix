@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WOLFFY: Flowers - Miley Cyrus (A1)</title>
+    <!-- Fonts: Glam Pop / Modern / Sunset -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pop: {
+                            dark: '#1a0b12',     /* Deep Sunset Violet */
+                            panel: '#2d1424',    /* Glass Panel */
+                            screen: '#000000',   /* Inner Screen */
+                            pink: '#EC4899',     /* Miley Pink */
+                            gold: '#FBBF24',     /* Sun Gold */
+                            border: '#4a2538'    /* Subtle border */
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        display: ['"Playfair Display"', 'serif'],
+                        mono: ['"Courier Prime"', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Base & Resets */
+        body { background-color: #1a0b12; color: #fdfdfd; overflow: hidden; font-family: 'Outfit', sans-serif; user-select: none; }
+        .allow-select { user-select: text; }
+
+        /* Glam Sunset Background */
+        .glam-bg { 
+            position: fixed; inset: 0; pointer-events: none; z-index: 0; 
+            background: linear-gradient(to top, #321021 0%, #0a0306 100%);
+        }
+        .glam-glow {
+            position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4;
+            animation: pulseLight 10s infinite alternate ease-in-out;
+        }
+        @keyframes pulseLight { 0% { transform: scale(1) translate(0, 0); opacity: 0.3; } 100% { transform: scale(1.2) translate(20px, -20px); opacity: 0.6; } }
+
+        /* Record Player Animations */
+        .vinyl-spin { animation: spin 4s linear infinite; }
+        .vinyl-paused { animation-play-state: paused; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Slide Navigation */
+        .slide { display: none; opacity: 0; width: 100%; min-height: 100%; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; }
+        .slide.active { display: flex; animation: slideFadeIn 0.5s ease-out forwards; }
+        .slide::before, .slide::after { content: ''; margin: auto; }
+        .slide > * { flex-shrink: 0; max-width: 100%; z-index: 20; }
+        @keyframes slideFadeIn { from { opacity: 0; transform: scale(0.98) translateY(15px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+        /* UI Elements - Glassmorphism */
+        .glass-panel { background: rgba(45, 20, 36, 0.65); backdrop-filter: blur(20px); border: 1px solid rgba(251, 191, 36, 0.15); box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
+        
+        .chunky-btn { background: #1a0b12; border: 1px solid #4a2538; border-bottom: 3px solid #000; transition: all 0.1s; }
+        .chunky-btn:active { transform: translateY(2px); border-bottom: 1px solid #000; background: #000; }
+        .chunky-btn:hover:not(:disabled) { border-color: #FBBF24; box-shadow: 0 0 15px rgba(251,191,36,0.3); }
+        .chunky-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .mcq-btn { transition: all 0.2s; border: 2px solid transparent; background: rgba(45, 20, 36, 0.8); }
+        .mcq-btn:hover { border-color: #FBBF24; background: rgba(251, 191, 36, 0.15); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(251,191,36,0.2); }
+
+        .lyric-highlight { color: #FBBF24; font-weight: 800; cursor: pointer; border-bottom: 2px dashed #FBBF24; transition: all 0.3s; padding: 0 5px; }
+        .lyric-highlight:hover { background: rgba(251, 191, 36, 0.2); text-shadow: 0 0 10px rgba(251, 191, 36, 0.8); color: #fff; }
+
+        /* 3D Cards */
+        .pop-card { background: linear-gradient(135deg, #2d1424 0%, #1a0b12 100%); color: #fff; border-radius: 24px; border: 2px solid #4a2538; box-shadow: 0 15px 35px rgba(0,0,0,0.4); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; transform-style: preserve-3d; position: relative; }
+        .pop-card:hover { transform: translateY(-8px) scale(1.02); border-color: #EC4899; box-shadow: 0 0 25px rgba(236,72,153,0.3); }
+        .pop-card.flipped { border-color: #FBBF24; box-shadow: 0 0 35px rgba(251, 191, 36, 0.3); transform: rotateY(180deg); }
+        .card-front, .card-back { backface-visibility: hidden; position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; border-radius: 22px; }
+        .card-back { transform: rotateY(180deg); background: rgba(251,191,36,0.05); }
+
+        /* Grammar Tuner (Slider) */
+        .toggle-switch { width: 140px; height: 60px; background: #000; border-radius: 30px; position: relative; cursor: pointer; box-shadow: inset 0 5px 15px rgba(0,0,0,0.8); border: 2px solid #4a2538; transition: border-color 0.3s;}
+        .toggle-knob { width: 50px; height: 50px; background: #2d1424; border: 2px solid #EC4899; border-radius: 50%; position: absolute; left: 3px; top: 3px; box-shadow: 0 0 10px rgba(236,72,153,0.5); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); display: flex; align-items: center; justify-content: center; }
+        .toggle-switch.active { border-color: #EC4899; box-shadow: inset 0 5px 15px rgba(0,0,0,0.8), 0 0 15px rgba(236,72,153,0.3); }
+        .toggle-switch.active .toggle-knob { transform: translateX(80px); background: #EC4899; border-color: #EC4899; box-shadow: 0 0 15px rgba(236,72,153,0.8); }
+
+        /* Sentence Builder */
+        .tape-blank { display: inline-block; min-width: 80px; height: 45px; border-bottom: 3px dashed #FBBF24; margin: 0 8px; vertical-align: middle; text-align: center; font-weight: bold; color: #FBBF24; cursor: pointer; transition: 0.3s; border-radius: 8px; }
+        .tape-blank.filled { background: rgba(251, 191, 36, 0.1); border-bottom-style: solid; }
+        .tape-piece { background: #1a0b12; color: #fff; padding: 12px 24px; border-radius: 12px; border: 1px solid #FBBF24; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 0 #000; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .tape-piece:hover { background: #FBBF24; color: #000; transform: translateY(-2px); box-shadow: 0 6px 0 #000, 0 0 15px rgba(251,191,36,0.5); }
+        .tape-piece:active { transform: translateY(4px); box-shadow: 0 0 0 #000; }
+        .tape-piece.used { opacity: 0; pointer-events: none; }
+
+        /* Memory Game Cards */
+        .memory-card { height: 140px; perspective: 1000px; cursor: pointer; width: 100%; }
+        .memory-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; pointer-events: none; }
+        .memory-card.flipped .memory-card-inner { transform: rotateY(180deg); }
+        .memory-card.matched .memory-card-back { background: #EC4899 !important; color: #fff !important; border-color: #EC4899 !important; box-shadow: 0 0 15px rgba(236, 72, 153, 0.5); }
+        .memory-card-front, .memory-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; border: 2px solid #4a2538; }
+        .memory-card-front { background: #2d1424; font-size: 3rem; color: #4a2538; }
+        .memory-card-front::after { content: '🌸'; }
+        .memory-card-back { background: #000; color: #FBBF24; transform: rotateY(180deg); }
+
+        .shake { animation: shake 0.4s both; border-color: #ef4444 !important; color: #ef4444 !important; }
+        @keyframes shake { 10%, 90% { transform: translate3d(-2px, 0, 0); } 20%, 80% { transform: translate3d(4px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-6px, 0, 0); } 40%, 60% { transform: translate3d(6px, 0, 0); } }
+
+        .confetti { position: absolute; width: 8px; height: 16px; opacity: 0; z-index: 10000; pointer-events: none; border-radius: 4px; }
+        @keyframes fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        
+        /* Sparkles effect */
+        .sparkle {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px #FBBF24;
+            opacity: 0;
+            animation: sparkle-anim 4s infinite linear;
+        }
+        @keyframes sparkle-anim {
+            0% { opacity: 0; transform: scale(0) translateY(0); }
+            50% { opacity: 1; transform: scale(1) translateY(-20px); }
+            100% { opacity: 0; transform: scale(0) translateY(-40px); }
+        }
+    </style>
+</head>
+<body class="flex flex-col h-screen w-screen relative">
+
+    <!-- Sunset Glam Background -->
+    <div class="glam-bg"></div>
+    <div class="glam-glow w-[500px] h-[500px] bg-pop-pink top-[-100px] left-[-100px]"></div>
+    <div class="glam-glow w-[600px] h-[600px] bg-pop-gold bottom-[-200px] right-[-100px]" style="animation-delay: 2s;"></div>
+    
+    <!-- JS Sparkles container -->
+    <div id="sparkle-container" class="absolute inset-0 pointer-events-none z-0"></div>
+
+    <!-- ================= MAIN PANEL ================= -->
+    <main class="flex-1 flex flex-col relative z-10 w-full max-w-[1600px] mx-auto p-2 lg:p-6 pb-[120px]">
+        <div class="flex-1 rounded-3xl bg-[#0a0306]/60 border border-pop-gold/30 overflow-y-auto hide-scroll flex flex-col allow-select shadow-[0_20px_50px_rgba(0,0,0,0.8)] relative" id="slides-container">
+            
+            <!-- WATERMARK -->
+            <div class="absolute bottom-6 right-8 z-0 text-white/5 font-black font-sans text-5xl md:text-7xl tracking-widest pointer-events-none uppercase">
+                WOLFFY A1
+            </div>
+
+            <!-- SLIDE 01: INTRO -->
+            <section class="slide active">
+                <div class="flex justify-between items-start mb-8 w-full max-w-5xl mx-auto z-20">
+                    <div class="text-center w-full">
+                        <h2 class="font-bold text-pop-gold tracking-[0.3em] uppercase text-sm mb-4 bg-pop-gold/10 inline-block px-6 py-2 rounded-full border border-pop-gold/30 shadow-[0_0_15px_rgba(251,191,36,0.3)]">Masterclass • Volume A1</h2>
+                        <h1 class="text-6xl lg:text-9xl font-black font-display leading-none text-white tracking-tight mb-4 italic">Flowers</h1>
+                        <p class="text-3xl text-pop-pink font-bold tracking-widest uppercase">Miley Cyrus</p>
+                    </div>
+                </div>
+                
+                <div class="border-y border-white/10 py-8 my-6 w-full max-w-4xl mx-auto z-20 glass-panel rounded-2xl p-8">
+                    <p class="text-xl md:text-2xl text-gray-300 font-medium mb-4">> LEVEL_ <span class="text-white font-bold">A1 (Beginner)</span></p>
+                    <p class="text-xl md:text-2xl text-gray-300 font-medium mb-4">> GRAMMAR_ <span class="text-pop-pink font-bold">"CAN" & Reflexive Pronouns</span></p>
+                    <p class="text-xl md:text-2xl text-gray-300 font-medium">> THEME_ <span class="text-pop-gold font-bold">Independence & Self-Love 🌸</span></p>
+                </div>
+
+                <div class="bg-pop-pink/10 p-6 rounded-xl border border-pop-pink/30 w-full max-w-4xl mx-auto text-center mt-4 z-20">
+                    <p class="text-pop-pink font-bold text-xl mb-2 uppercase tracking-widest">Instructions:</p>
+                    <p class="text-lg md:text-xl text-gray-300">Navigate using the bottom player. <strong class="text-white">Double-click</strong> any english word on the screen to trigger the WOLFFY Smart Dict!</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 02: COVER ART -->
+            <section class="slide">
+                <h2 class="font-bold text-pop-gold tracking-widest uppercase text-sm mb-4 z-20 text-center">Track 02 • The Record</h2>
+                <h1 class="text-4xl lg:text-6xl font-black font-display text-white mb-8 z-20 text-center italic">Endless Summer Vacation</h1>
+                <div class="w-full max-w-xl rounded-full overflow-hidden shadow-[0_0_50px_rgba(236,72,153,0.4)] border-4 border-pop-pink bg-black flex items-center justify-center z-20 mx-auto transition-transform duration-1000 hover:scale-105 aspect-square">
+                    <img src="https://i1.sndcdn.com/artworks-YOSTbh90ESawTlzu-s9fROg-t500x500.jpg" alt="Flowers Cover" class="w-full h-full object-cover">
+                </div>
+            </section>
+
+            <!-- SLIDE 03: VIBE CHECK -->
+            <section class="slide">
+                <h2 class="font-bold text-pop-gold tracking-widest uppercase text-sm mb-4 z-20 text-center">Track 03 • Warm Up</h2>
+                <h1 class="text-4xl lg:text-6xl font-black font-display text-white mb-8 z-20 text-center italic">Vibe Check</h1>
+                <p class="text-2xl md:text-3xl font-bold text-white mb-10 text-center z-20">Do you like to go to the cinema <span class="text-pop-pink border-b-4 border-pop-pink pb-1">alone</span>?</p>
+                
+                <div class="space-y-4 w-full max-w-4xl mx-auto options-group z-20" data-correct="any">
+                    <button class="w-full text-left glass-panel p-6 rounded-2xl text-xl font-bold hover:border-pop-gold mcq-btn flex items-center gap-6" onclick="selectMCQ(this, 'correct', 'hub-track3')">
+                        <div class="w-14 h-14 bg-black rounded-full flex items-center justify-center text-3xl shrink-0 shadow-inner">🍿</div> Yes, I love my own company!
+                    </button>
+                    <button class="w-full text-left glass-panel p-6 rounded-2xl text-xl font-bold hover:border-pop-gold mcq-btn flex items-center gap-6" onclick="selectMCQ(this, 'correct', 'hub-track3')">
+                        <div class="w-14 h-14 bg-black rounded-full flex items-center justify-center text-3xl shrink-0 shadow-inner">🤷</div> Only sometimes.
+                    </button>
+                    <button class="w-full text-left glass-panel p-6 rounded-2xl text-xl font-bold hover:border-pop-gold mcq-btn flex items-center gap-6" onclick="selectMCQ(this, 'correct', 'hub-track3')">
+                        <div class="w-14 h-14 bg-black rounded-full flex items-center justify-center text-3xl shrink-0 shadow-inner">👯</div> No, I prefer to go with friends.
+                    </button>
+                </div>
+                <div class="hidden mt-6 p-6 border-l-4 border-pop-gold bg-pop-gold/10 rounded-r-2xl w-full max-w-4xl mx-auto z-20 shadow-lg" id="hub-track3">
+                    <p class="text-pop-gold text-sm mb-2 uppercase tracking-widest font-bold">Speaking Starter</p>
+                    <p class="text-white text-2xl font-bold italic">"I like to go alone because..."</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 04: THE STORY -->
+            <section class="slide">
+                <h2 class="font-bold text-pop-gold tracking-widest uppercase text-sm mb-4 z-20 text-center">Track 04 • Context</h2>
+                <h1 class="text-4xl lg:text-6xl font-black font-display text-white mb-8 z-20 text-center italic">The Meaning</h1>
+                <div class="glass-panel p-12 rounded-3xl text-center shadow-2xl relative w-full max-w-4xl mx-auto z-20">
+                    <p class="text-2xl md:text-3xl font-bold leading-relaxed text-white mb-8">Miley Cyrus wrote this song to celebrate <strong class="text-pop-pink">Independence</strong>.</p>
+                    <p class="text-xl text-gray-300 font-medium bg-black/50 p-6 rounded-2xl inline-block border border-white/10">She is saying: "I don't need another person to be happy. I can do it myself."</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 05: CLOUD VOCABULARY 1 -->
+            <section class="slide">
+                <h2 class="font-bold text-pop-gold tracking-widest uppercase text-sm mb-4 z-20 text-center">Track 05 • Vocabulary</h2>
+                <h1 class="text-4xl lg:text-6xl font-black font-display text-white mb-8 z-20 text-center italic">Action Words</h1>
+                <p class="text-xl text-gray-400 mb-10 z-20 text-center">Click the 3D cards to discover the verbs.</p>
+                
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-6xl mx-auto z-20">
+                    <div class="pop-card aspect-[3/4] w-full" onclick="flipPopCard(this, 'Buy', 'To pay money for something.', 'What do you buy at the supermarket?', 1)">
+                        <div class="card-front">
+                            <span class="text-6xl mb-4 drop-shadow-md">🛍️</span>
+                            <h4 class="text-2xl font-black uppercase tracking-widest text-pop-pink word-label">Word 1</h4>
+                        </div>
+                        <div class="card-back hidden">
+                            <h4 class="text-3xl font-black text-pop-pink mb-4 c-word"></h4>
+                            <p class="text-sm text-gray-300 text-center c-def font-medium"></p>
+                        </div>
+                    </div>
+                    <div class="pop-card aspect-[3/4] w-full" onclick="flipPopCard(this, 'Write', 'To make words with a pen.', 'Do you write with a pen or pencil?', 1)">
+                        <div class="card-front">
+                            <span class="text-6xl mb-4 drop-shadow-md">✍️</span>
+                            <h4 class="text-2xl font-black uppercase tracking-widest text-pop-pink word-label">Word 2</h4>
+                        </div>
+                        <div class="card-back hidden">
+                            <h4 class="text-3xl font-black text-pop-pink mb-4 c-word"></h4>
+                            <p class="text-sm text-gray-300 text-center c-def font-medium"></p>
+                        </div>
+                    </div>
+                    <div class="pop-card aspect-[3/4] w-full" onclick="flipPopCard(this, 'Talk', 'To speak words to someone.', 'Who do you talk to every day?', 1)">
+                        <div class="card-front">
+                            <span class="text-6xl mb-4 drop-shadow-md">🗣️</span>
+                            <h4 class="text-2xl font-black uppercase tracking-widest text-pop-pink word-label">Word 3</h4>
+                        </div>
+                        <div class="card-back hidden">
+                            <h4 class="text-3xl font-black text-pop-pink mb-4 c-word"></h4>
+                            <p class="text-sm text-gray-300 text-center c-def font-medium"></p>
+                        </div>
+                    </div>
+                    <div class="pop-card aspect-[3/4] w-full" onclick="flipPopCard(this, 'Hold', 'To keep something in your hands.', 'What do you hold in your hand right now?', 1)">
+                        <div class="card-front">
+                            <span class="text-6xl mb-4 drop-shadow-md">🤝</span>
+                            <h4 class="text-2xl font-black uppercase tracking-widest text-pop-pink word-label">Word 4</h4>
+                        </div>
+                        <div class="card-back hidden">
+                            <h4 class="text-3xl font-black text-pop-pink mb-4 c-word"></h4>
+                            <p class="text-sm text-gray-300 text-center c-def font-medium"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="cloud-info-1" class="hidden mt-8 p-6 glass-panel w-full max-w-4xl mx-auto text-left shadow-lg z-20 rounded-2xl">
+                    <h3 id="c-title-1" class="text-3xl font-black font-display text-pop-pink mb-2 italic">Word</h3>
+                    <p id="c-def-1" class="text-white text-lg mb-4">Definition</p>
+                    <p class="text-pop-gold text-lg font-bold italic">> <span id="c-q-1">Question</span></p>
+                </div>
+            </section>
+
+            <!-- SLIDE 06: CLOUD VOCABULARY 2 -->
+            <section class="slide">
+                <h2 class="font-bold text-pop-gold tracking-widest uppercase text-sm mb-4 z-20 text-center">Track 06 • Vocabulary</h2>
+                <h1 class="text-4xl lg:text-6xl font-black font-display text-white mb-8 z-20 text-center italic">The Objects</h1>
+                <p class="text-xl text-gray-400 mb-10 z-20 text-center">Click to discover 4 more words.</p>
+                
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-6xl mx-auto z-20">
+                    <div class="pop-card aspect-[3/4] w-full" onclick="flipPopCard(this, 'Flowers', 'Beautiful colored plants.', 'What color are these flowers? 🌹', 2)">
+                        <div class="card-front">
+                            <span class="text-6xl mb-4 drop-shadow-md">💐</span>
+                            <h4 class="text-2xl font-black uppercase tracking-widest text-pop-gold word-label">Word 5</h4>
+                        </div>
+                        <div class="card-back hidden">
+                            <h4 class="text-3xl font-black text-pop-gold mb-4 c-word"></h4>
+                            <p class="text-sm text-gray-300 text-center c-def font-medium"></p>
+                        </div>
+                    </div>
+                    <div class="pop-card aspect-[3/4] w-full" onclick="flipPopCard(this, 'Sand', 'Yellow dirt at the beach.', 'Where can you find sand?', 2)">
+                        <div class="card-front">
+                            <span class="text-6xl mb-4 drop-shadow-md">🏖️</span>
+                            <h4 class="text-2xl font-black uppercase tracking-widest text-pop-gold word-label">Word 6</h4>
+                        </div>
+                        <div class="card-back hidden">
+                            <h4 class="text-3xl font-black text-pop-gold mb-4 c-word"></h4>
+                            <p class="text-sm text-gray-300 text-center c-def font-medium"></p>
+                        </div>
+                    </div>
+                    <div class="pop-card aspect-[3/4] w-full" onclick="flipPopCard(this, 'Hours', '60 minutes = 1 Hour.', 'How many hours do you sleep?', 2)">
+                        <div class="card-front">
+                            <span class="text-6xl mb-4 drop-shadow-md">⌚</span>
+                            <h4 class="text-2xl font-black uppercase tracking-widest text-pop-gold word-label">Word 7</h4>
+                        </div>
+                        <div class="card-back hidden">
+                            <h4 class="text-3xl font-black text-pop-gold mb-4 c-word"></h4>
+                            <p class="text-sm text-gray-300 text-center c-def font-medium"></p>
+                        </div>
+                    </div>
+                    <div class="pop-card aspect-[3/4] w-full" onclick="flipPopCard(this, 'Hand', 'The part of your body with fingers.', 'How many hands do you have?', 2)">
+                        <div class="card-front">
+                            <span class="text-6xl mb-4 drop-shadow-md">✋</span>
+                            <h4 class="text-2xl font-black uppercase tracking-widest text-pop-gold word-label">Word 8</h4>
+                        </div>
+                        <div class="card-back hidden">
+                            <h4 class="text-3xl font-black text-pop-gold mb-4 c-word"></h4>
+                            <p class="text-sm text-gray-300 text-center c-def font-medium"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="cloud-info-2" class="hidden mt-8 p-6 glass-panel w-full max-w-4xl mx-auto text-left shadow-lg z-20 rounded-2xl">
+                    <h3 id="c-title-2" class="text-3xl font-black font-display text-pop-gold mb-2 italic">Word</h3>
+                    <p id="c-def-2" class="text-white text-lg mb-4">Definition</p>
+                    <p class="text-pop-pink text-lg font-bold italic">> <span id="c-q-2">Question</span></p>
+                </div>
+            </section>
+
+            <!-- SLIDE 07: PRE-LISTENING -->
+            <section class="slide">
+                <h2 class="font-bold text-pop-gold tracking-widest uppercase text-sm mb-4 z-20 text-center">Track 07 • System Check</h2>
+                <h1 class="text-4xl lg:text-6xl font-black font-display text-white mb-8 z-20 text-center italic">The Music Video</h1>
+                <div class="glass-panel p-12 rounded-3xl text-center max-w-4xl w-full relative z-20 shadow-2xl border-t-4 border-t-pop-pink">
+                    <p class="text-2xl md:text-3xl font-bold leading-relaxed text-white mb-6">Look at the singer dancing alone in the video.</p>
+                    <p class="text-xl text-pop-gold">Does she look sad and lonely, or strong and happy?</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 08: THE VIDEO -->
+            <section class="slide h-full w-full">
+                <h2 class="font-bold text-pop-gold tracking-widest uppercase text-sm mb-4 z-20 text-center">Track 08 • Playing</h2>
+                <h1 class="text-4xl lg:text-6xl font-black font-display text-white mb-6 z-20 text-center italic">Official Video</h1>
+                <div class="w-full max-w-5xl mx-auto rounded-3xl overflow-hidden border-4 border-pop-pink bg-black shadow-[0_0_50px_rgba(236,72,153,0.3)] relative min-h-[350px] z-20">
+                    <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/G7KNmW9a75Y?start=45&rel=0" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </section>
+
+            <!-- SLIDE 09: LISTENING CHECK -->
+            <section class="slide">
+                <h2 class="font-bold text-pop-gold tracking-widest uppercase text-sm mb-4 z-20 text-center">Track 09 • Quiz</h2>
+                <h1 class="text-4xl lg:text-6xl font-black font-display text-white mb-8 z-20 text-center italic">Listening Check</h1>
+                <p class="text-2xl font-bold text-white mb-10 text-center z-20">Is this song <span class="text-blue-400 bg-blue-400/10 px-3 rounded">Sad & Slow</span> or <span class="text-yellow-400 bg-yellow-400/10 px-3 rounded">Happy & Upbeat</span>?</p>
+                
+                <div class="flex justify-center gap-6 z-20 w-full max-w-3xl mx-auto">
+                    <button class="w-1/2 glass-panel p-8 rounded-2xl text-2xl font-bold hover:border-blue-400 hover:bg-blue-400/10 transition-colors font-display italic" onclick="checkSong(false, this)">
+                        🌧️ Sad & Slow
+                    </button>
+                    <button class="w-1/2 glass-panel p-8 rounded-2xl text-2xl font-bold hover:border-pop-gold hover:bg-pop-gold/10 transition-colors font-display italic" onclick="checkSong(true, this)">
+                        ☀️ Happy & Upbeat
+                    </button>
+                </div>
+                <div id="listen-hub" class="hidden mt-8 p-6 border-l-4 border-pop-gold bg-pop-gold/10 font-bold text-white w-full max-w-3xl mx-auto text-center text-xl z-20 rounded-r-2xl shadow-lg">
+                    > Correct! It has a very positive and happy energy.
+                </div>
+            </section>
+
+            <!-- SLIDE 10: LYRICS 1 -->
+            <section class="slide">
+                <h2 class="font-bold text-pop-gold tracking-widest uppercase text-sm mb-4 z-20 text-center">Track 10 • Reading</h2>
+                <h1 class="text-4xl lg:text-6xl font-black font-display text-white mb-8 z-20 text-center italic">The Lyrics</h1>
+                <p class="text-xl text-gray-300 mb-8 z-20 text-center">Click on the <span class="text-pop-gold font-bold">golden words</span> for Insights!</p>
+                
+                <div class="w-full max-w-4xl mx-auto flex-1 glass-panel rounded-3xl p-10 lg:p-14 overflow-y-auto text-center shadow-2xl z-20 flex flex-col justify-center border-t-4 border-t-pop-gold">
+                    <div class="space-y-8 text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight">
+                        <p>I <span class="lyric-highlight" onclick="openLyricInsight('can')">can</span> <span class="lyric-highlight" onclick="openLyricInsight('buy')">buy</span> <span class="lyric-highlight" onclick="openLyricInsight('myself')">myself</span> flowers</p>
+                        <p><span class="lyric-highlight" onclick="openLyricInsight('write')">Write</span> my name in the sand</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 11: LYRICS 2 -->
+            <section class="slide">
+                <h2 class="font-bold text-pop-gold tracking-widest uppercase text-sm mb-4 z-20 text-center">Track 11 • Reading</h2>
+                <h1 class="text-4xl lg:text-6xl font-black font-display text-white mb-8 z-20 text-center italic">The Lyrics</h1>
+                <div class="w-full max-w-4xl mx-auto flex-1 glass-panel rounded-3xl p-10 lg:p-14 overflow-y-auto text-center shadow-2xl z-20 flex flex-col justify-center border-t-4 border-t-pop-gold">
+                    <div class="space-y-8 text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight">
+                        <p><span class="lyric-highlight" onclick="openLyricInsight('talk')">Talk</span> to <span class="lyric-highlight" onclick="openLyricInsight('myself')">myself</span> for hours</p>
+                        <p>And I <span class="lyric-highlight" onclick="openLyricInsight('can')">can</span> <span class="lyric-highlight" onclick="openLyricInsight('hold')">hold</span> my own hand</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 12: GRAMMAR INTRO (MACHINE) -->
+            <section class="slide">
+                <h2 class="font-bold text-pop-gold tracking-widest uppercase text-sm mb-4 z-20 text-center">Track 12 • Grammar</h2>
+                <h1 class="text-5xl lg:text-7xl font-black font-display text-white mb-6 z-20 text-center italic">The "CAN" Machine</h1>
+                <p class="text-xl text-gray-300 mb-12 text-center z-20">Slide the button to inject <strong class="text-pop-pink">Independence</strong>.</p>
+                
+                <div class="glass-panel p-10 md:p-16 rounded-[3rem] shadow-2xl relative w-full max-w-4xl mx-auto z-20 flex flex-col items-center">
+                    
+                    <!-- Display Screen -->
+                    <div class="bg-[#000] border border-white/20 w-full rounded-2xl h-48 mb-12 flex flex-col items-center justify-center relative overflow-hidden shadow-inner">
+                        
+                        <!-- Normal Text -->
+                        <div id="text-reality" class="absolute inset-0 flex flex-col items-center justify-center transition-all duration-500">
+                            <p class="text-3xl md:text-5xl font-bold text-gray-400">I buy flowers.</p>
+                            <span class="text-xs text-gray-500 uppercase tracking-widest mt-6 bg-gray-900 px-3 py-1 rounded-full">Normal Fact</span>
+                        </div>
+
+                        <!-- Can Text -->
+                        <div id="text-imagination" class="absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 opacity-0 scale-90 pointer-events-none">
+                            <p class="text-4xl md:text-6xl font-black text-white">I <span class="text-pop-pink drop-shadow-[0_0_15px_rgba(236,72,153,0.8)]">CAN</span> buy flowers.</p>
+                            <span class="text-xs text-pop-pink uppercase tracking-widest mt-6 bg-pop-pink/10 px-3 py-1 rounded-full border border-pop-pink/30 font-bold">Ability & Independence</span>
+                        </div>
+                    </div>
+
+                    <!-- Fader -->
+                    <div class="w-full flex items-center justify-center gap-6 font-bold text-gray-500">
+                        <span>OFF</span>
+                        <div id="mixer-track" class="toggle-switch" onclick="toggleMachine()">
+                            <div id="machine-knob" class="toggle-knob"><i class="fa-solid fa-power-off text-white"></i></div>
+                        </div>
+                        <span class="text-pop-pink">ON</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 13: GRAMMAR STRUCTURE -->
+            <section class="slide">
+                <h2 class="font-bold text-pop-gold tracking-widest uppercase text-sm mb-4 z-20 text-center">Track 13 • Structure</h2>
+                <h1 class="text-4xl lg:text-6xl font-black font-display text-white mb-8 z-20 text-center italic">How to make it?</h1>
+                <p class="text-xl text-gray-300 mb-8 font-medium text-center z-20">To show independence, put <strong class="text-pop-pink">CAN</strong> before the verb!</p>
+                <div class="glass-panel p-10 rounded-3xl w-full max-w-4xl mx-auto z-20 shadow-xl text-center">
+                    <p class="text-3xl md:text-5xl font-black text-white mb-6">Subject + <span class="text-pop-pink">Can</span> + Verb</p>
+                    <div class="h-px w-1/2 bg-white/20 mx-auto my-6"></div>
+                    <p class="text-2xl text-gray-300 mb-4 font-bold">I <span class="text-pop-pink">can</span> write.</p>
+                    <p class="text-2xl text-gray-300 font-bold">She <span class="text-pop-pink">can</span> dance.</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 14: DRILL 1 -->
+            <section class="slide">
+                <h2 class="font-bold text-pop-gold tracking-widest uppercase text-sm mb-4 z-20 text-center">Track 14 • Practice</h2>
+                <h1 class="text-4xl lg:text-6xl font-black font-display text-white mb-8 text-center z-20 italic">Complete the Phrase</h1>
+                <p class="text-xl text-gray-300 mb-8 font-medium text-center z-20">I don't need you to buy them for me.</p>
+                <div class="text-3xl md:text-5xl font-black mb-10 glass-panel p-12 rounded-3xl text-center text-white w-full max-w-4xl mx-auto z-20 shadow-2xl">
+                    "I <span class="text-pop-pink border-b-4 border-pop-pink pb-1 px-4">_______</span> buy flowers."
+                </div>
+                <div class="grid grid-cols-2 gap-6 w-full max-w-4xl mx-auto options-group z-20">
+                    <button class="glass-panel border-2 border-transparent p-8 rounded-2xl text-3xl font-black text-white hover:border-pop-pink mcq-btn" onclick="selectMCQ(this, 'correct', 'hub-dr1')">CAN</button>
+                    <button class="glass-panel border-2 border-transparent p-8 rounded-2xl text-3xl font-black text-white hover:border-pop-pink mcq-btn" onclick="selectMCQ(this, 'wrong')">AM</button>
+                </div>
+                <div class="hidden mt-8 p-6 bg-emerald-500/10 border-l-4 border-emerald-500 font-bold text-emerald-400 w-full max-w-4xl mx-auto text-center text-xl z-20 rounded-r-2xl" id="hub-dr1">
+                    > Correct! "Can" shows ability.
+                </div>
+            </section>
+
+            <!-- SLIDE 15: DRILL 2 (NEGATIVE) -->
+            <section class="slide">
+                <h2 class="font-bold text-pop-gold tracking-widest uppercase text-sm mb-4 z-20 text-center">Track 15 • Practice</h2>
+                <h1 class="text-4xl lg:text-6xl font-black font-display text-white mb-8 text-center z-20 italic">The Negative</h1>
+                <p class="text-xl text-gray-300 mb-8 font-medium text-center z-20">How do we say "no"?</p>
+                <div class="text-3xl md:text-4xl font-black mb-10 glass-panel p-12 rounded-3xl text-center text-white w-full max-w-4xl mx-auto z-20 shadow-2xl">
+                    "I <span class="text-pop-pink border-b-4 border-pop-pink pb-1 px-4">_______</span> dance. I'm terrible!"
+                </div>
+                <div class="space-y-4 w-full max-w-4xl mx-auto options-group z-20">
+                    <button class="w-full text-left glass-panel p-6 rounded-2xl text-2xl font-bold text-white hover:border-pop-pink mcq-btn" onclick="selectMCQ(this, 'wrong')">A) don't can</button>
+                    <button class="w-full text-left glass-panel p-6 rounded-2xl text-2xl font-bold text-white hover:border-pop-pink mcq-btn" onclick="selectMCQ(this, 'wrong')">B) not can</button>
+                    <button class="w-full text-left glass-panel p-6 rounded-2xl text-2xl font-bold text-white hover:border-pop-pink mcq-btn" onclick="selectMCQ(this, 'correct', 'hub-dr2')">C) can't (cannot)</button>
+                </div>
+                <div id="hub-dr2" class="hidden mt-8 p-6 bg-emerald-500/10 border-l-4 border-emerald-500 text-emerald-400 font-bold text-xl text-center w-full max-w-4xl mx-auto rounded-r-2xl z-20">
+                    > Correct! The negative is "Can't".
+                </div>
+            </section>
+
+            <!-- SLIDE 16: SENTENCE BUILDER -->
+            <section class="slide">
+                <h2 class="font-bold text-pop-gold tracking-widest uppercase text-sm mb-4 z-20 text-center">Track 16 • Minigame</h2>
+                <h1 class="text-4xl lg:text-6xl font-black font-display text-white mb-6 z-20 text-center italic">Sentence Builder</h1>
+                <p class="text-xl text-gray-300 mb-10 text-center z-20">> Click the blocks to build the lyric.</p>
+                
+                <div class="glass-panel p-12 rounded-3xl shadow-2xl text-center w-full max-w-4xl mx-auto z-20 relative border-t-4 border-t-pop-pink">
+                    <div class="text-3xl lg:text-4xl font-bold mb-16 text-white flex flex-wrap justify-center items-center gap-y-6 leading-loose uppercase">
+                        "I <span class="tape-blank" id="t-blank1" onclick="returnTape(1)"></span> 
+                         <span class="tape-blank" id="t-blank2" onclick="returnTape(2)"></span> 
+                         my own 
+                         <span class="tape-blank" id="t-blank3" onclick="returnTape(3)"></span>"
+                    </div>
+                    <div class="flex gap-4 justify-center flex-wrap" id="tape-bank">
+                        <div class="tape-piece text-xl" onclick="fillTape(this, 'hand')">hand</div>
+                        <div class="tape-piece text-xl" onclick="fillTape(this, 'can')">can</div>
+                        <div class="tape-piece text-xl" onclick="fillTape(this, 'hold')">hold</div>
+                    </div>
+                </div>
+                <div id="tape-hub" class="hidden mt-8 p-6 bg-emerald-500/10 border-l-4 border-emerald-500 text-emerald-400 font-bold text-2xl w-full max-w-4xl mx-auto text-center rounded-r-2xl z-20">
+                    > PERFECT! "I can hold my own hand."
+                </div>
+            </section>
+
+            <!-- SLIDE 17: VOCAB PRACTICE -->
+            <section class="slide">
+                <h2 class="font-bold text-pop-gold tracking-widest uppercase text-sm mb-4 z-20 text-center">Track 17 • Practice</h2>
+                <h1 class="text-4xl lg:text-6xl font-black font-display text-white mb-8 text-center z-20 italic">Match the Action</h1>
+                <p class="text-xl text-gray-300 mb-8 font-medium text-center z-20">Which verb completes the lyric?</p>
+                <div class="text-3xl md:text-5xl font-black mb-10 glass-panel p-12 rounded-3xl text-center text-white w-full max-w-4xl mx-auto z-20 shadow-2xl">
+                    "I can <span class="text-pop-pink border-b-4 border-pop-pink pb-1 px-4">_______</span> myself flowers."
+                </div>
+                <div class="grid grid-cols-2 gap-6 w-full max-w-4xl mx-auto options-group z-20">
+                    <button class="glass-panel border-2 border-transparent p-8 rounded-2xl text-3xl font-black text-white hover:border-pop-pink mcq-btn shadow-md" onclick="selectMCQ(this, 'correct', 'hub-voc1')">BUY</button>
+                    <button class="glass-panel border-2 border-transparent p-8 rounded-2xl text-3xl font-black text-white hover:border-pop-pink mcq-btn shadow-md" onclick="selectMCQ(this, 'wrong')">WRITE</button>
+                </div>
+                <div class="hidden mt-8 p-6 bg-emerald-500/10 border-l-4 border-emerald-500 font-bold text-emerald-400 w-full max-w-4xl mx-auto text-center text-xl z-20 rounded-r-2xl" id="hub-voc1">
+                    > Correct! You buy flowers.
+                </div>
+            </section>
+
+            <!-- SLIDE 18: MEMORY MATCH (Word to Emoji A1) -->
+            <section class="slide">
+                <h2 class="font-bold text-pop-gold tracking-widest uppercase text-sm mb-4 z-20 text-center">Track 18 • Minigame</h2>
+                <h1 class="text-4xl lg:text-6xl font-black font-display text-white mb-8 z-20 text-center italic">Emoji Match</h1>
+                <p class="text-xl text-gray-300 mb-8 text-center z-20">Match the English word to its meaning.</p>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-5xl mx-auto z-20" id="mem-grid">
+                    <!-- JS injected -->
+                </div>
+                <div id="mem-hub" class="hidden mt-8 p-6 bg-pop-pink/20 border-l-4 border-pop-pink text-white font-black w-full max-w-5xl mx-auto text-center text-3xl rounded-r-2xl z-20 tracking-wider font-display italic">
+                    Great Memory!
+                </div>
+            </section>
+
+            <!-- SLIDE 19: GRAMMAR 2 (MYSELF) -->
+            <section class="slide">
+                <h2 class="font-bold text-pop-gold tracking-widest uppercase text-sm mb-4 z-20 text-center">Track 19 • Grammar</h2>
+                <h1 class="text-5xl lg:text-7xl font-black font-display text-white mb-6 z-20 text-center italic">Special Word: MYSELF</h1>
+                <p class="text-xl text-gray-300 mb-12 text-center z-20">When you do an action for YOU alone.</p>
+                
+                <div class="glass-panel p-10 md:p-16 rounded-[3rem] shadow-2xl relative w-full max-w-4xl mx-auto z-20">
+                    <div class="flex items-center justify-center text-7xl mb-8">🪞</div>
+                    <p class="text-2xl text-center text-white font-bold leading-relaxed mb-8">
+                        If <strong class="text-pop-pink">I</strong> do something to <strong class="text-pop-pink">ME</strong>, I use <strong class="text-pop-gold">MYSELF</strong>.
+                    </p>
+                    <div class="bg-black/30 p-6 rounded-2xl border-l-4 border-pop-pink mb-4">
+                        <p class="text-2xl text-white font-medium">"I talk to <strong class="text-pop-pink">myself</strong>."</p>
+                    </div>
+                    <div class="bg-black/30 p-6 rounded-2xl border-l-4 border-pop-pink">
+                        <p class="text-2xl text-white font-medium">"I buy presents for <strong class="text-pop-pink">myself</strong>."</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 20: DRILL 3 (MYSELF) -->
+            <section class="slide">
+                <h2 class="font-bold text-pop-gold tracking-widest uppercase text-sm mb-4 z-20 text-center">Track 20 • Practice</h2>
+                <h1 class="text-4xl lg:text-6xl font-black font-display text-white mb-8 text-center z-20 italic">Complete the Phrase</h1>
+                <div class="text-3xl md:text-4xl font-bold mb-10 glass-panel p-12 rounded-3xl text-center text-white w-full max-w-4xl mx-auto z-20 shadow-2xl">
+                    "I talk to <span class="text-pop-pink border-b-4 border-pop-pink pb-1 px-4">_______</span> for hours."
+                </div>
+                <div class="space-y-4 w-full max-w-4xl mx-auto options-group z-20">
+                    <button class="w-full text-left glass-panel border-2 border-transparent p-6 rounded-2xl text-2xl font-bold text-white hover:border-pop-pink mcq-btn" onclick="selectMCQ(this, 'wrong')">A) me</button>
+                    <button class="w-full text-left glass-panel border-2 border-transparent p-6 rounded-2xl text-2xl font-bold text-white hover:border-pop-pink mcq-btn" onclick="selectMCQ(this, 'correct', 'hub-dr3')">B) myself</button>
+                    <button class="w-full text-left glass-panel border-2 border-transparent p-6 rounded-2xl text-2xl font-bold text-white hover:border-pop-pink mcq-btn" onclick="selectMCQ(this, 'wrong')">C) I</button>
+                </div>
+                <div id="hub-dr3" class="hidden mt-8 p-6 bg-emerald-500/10 border-l-4 border-emerald-500 text-emerald-400 font-bold text-xl text-center w-full max-w-4xl mx-auto rounded-r-2xl z-20">
+                    > Correct! You do the action to you.
+                </div>
+            </section>
+
+            <!-- SLIDE 21: SCENARIO -->
+            <section class="slide">
+                <h2 class="font-bold text-pop-gold tracking-widest uppercase text-sm mb-4 z-20 text-center">Track 21 • Scenario</h2>
+                <h1 class="text-4xl lg:text-6xl font-black font-display text-white mb-8 text-center z-20 italic">Hungry at Home</h1>
+                <div class="glass-panel p-10 rounded-3xl text-center w-full max-w-4xl mx-auto z-20 shadow-2xl mb-10">
+                    <div class="text-6xl mb-6">🍳</div>
+                    <p class="text-3xl font-bold text-white">You are hungry, but you are alone.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl mx-auto options-group z-20">
+                    <button class="glass-panel border-2 border-transparent p-8 rounded-2xl text-2xl font-bold text-white hover:border-pop-pink mcq-btn shadow-md" onclick="selectMCQ(this, 'any', 'hub-scen')">I can cook for myself.</button>
+                    <button class="glass-panel border-2 border-transparent p-8 rounded-2xl text-2xl font-bold text-white hover:border-pop-pink mcq-btn shadow-md" onclick="selectMCQ(this, 'any', 'hub-scen')">I can buy pizza for myself.</button>
+                </div>
+                <div class="hidden mt-8 p-6 bg-pop-pink/10 border-l-4 border-pop-pink font-bold text-white w-full max-w-4xl mx-auto text-center text-xl z-20 rounded-r-2xl" id="hub-scen">
+                    > Delicious independence!
+                </div>
+            </section>
+
+            <!-- SLIDE 22: ODD ONE OUT -->
+            <section class="slide">
+                <h2 class="font-bold text-pop-gold tracking-widest uppercase text-sm mb-4 z-20 text-center">Track 22 • Minigame</h2>
+                <h1 class="text-4xl lg:text-6xl font-black font-display text-white mb-8 text-center z-20 italic">Odd One Out</h1>
+                <p class="text-xl text-gray-300 mb-8 font-medium text-center z-20">Which word is <strong class="text-red-400">NOT</strong> an action (verb)?</p>
+                <div class="grid grid-cols-2 gap-6 w-full max-w-3xl mx-auto relative z-20">
+                    <button onclick="oddCheck(this, false)" class="glass-panel p-8 rounded-2xl font-black text-3xl border-2 border-transparent mcq-btn shadow-md text-white">Buy</button>
+                    <button onclick="oddCheck(this, false)" class="glass-panel p-8 rounded-2xl font-black text-3xl border-2 border-transparent mcq-btn shadow-md text-white">Write</button>
+                    <button onclick="oddCheck(this, true)" class="glass-panel p-8 rounded-2xl font-black text-3xl border-2 border-transparent mcq-btn shadow-md text-white">Sand</button>
+                    <button onclick="oddCheck(this, false)" class="glass-panel p-8 rounded-2xl font-black text-3xl border-2 border-transparent mcq-btn shadow-md text-white">Hold</button>
+                </div>
+                <div id="odd-hub" class="hidden mt-10 p-6 bg-emerald-500/10 border-l-4 border-emerald-500 text-emerald-400 font-bold text-xl text-center rounded-r-2xl w-full max-w-3xl mx-auto z-20">> Correct! "Sand" is a thing (noun).</div>
+            </section>
+
+            <!-- SLIDE 23: BAMBOOZLE -->
+            <section class="slide">
+                <h2 class="font-bold text-pop-gold tracking-widest uppercase text-sm mb-4 z-20 text-center">Track 23 • Rapid Fire</h2>
+                <h1 class="text-5xl lg:text-7xl font-black font-display text-white mb-8 z-20 text-center italic">Bamboozle Mode</h1>
+                <p class="text-xl text-gray-300 mb-8 text-center z-20">Answer 2 consecutive True/False questions.</p>
+                
+                <div id="rq1" class="glass-panel border-t-8 border-t-pop-pink p-12 rounded-3xl text-center w-full max-w-4xl shadow-2xl z-20 mx-auto transition-all">
+                    <p class="font-bold text-3xl mb-12 text-white">"Can" is used to show independence and ability.</p>
+                    <div class="flex gap-6 justify-center">
+                        <button onclick="rqCheck(1, true)" class="w-40 bg-black border border-white/20 text-white py-4 rounded-xl font-bold text-2xl hover:bg-white hover:text-black transition-colors">True</button>
+                        <button onclick="rqCheck(1, false)" class="w-40 bg-black border border-white/20 text-white py-4 rounded-xl font-bold text-2xl hover:bg-white hover:text-black transition-colors">False</button>
+                    </div>
+                </div>
+                <div id="rq2" class="hidden glass-panel border-t-8 border-t-pop-pink p-12 rounded-3xl text-center w-full max-w-4xl shadow-2xl z-20 mx-auto transition-all">
+                    <p class="font-bold text-3xl mb-12 text-white">We say "I can to buy flowers".</p>
+                    <div class="flex gap-6 justify-center">
+                        <button onclick="rqCheck(2, false)" class="w-40 bg-black border border-white/20 text-white py-4 rounded-xl font-bold text-2xl hover:bg-white hover:text-black transition-colors">True</button>
+                        <button onclick="rqCheck(2, true)" class="w-40 bg-black border border-white/20 text-white py-4 rounded-xl font-bold text-2xl hover:bg-white hover:text-black transition-colors">False</button>
+                    </div>
+                </div>
+                <div id="rq-hub" class="hidden mt-8 font-black text-5xl text-pop-gold z-20 text-center drop-shadow-md font-display italic">🏆 GRAMMAR MASTER!</div>
+            </section>
+
+            <!-- SLIDE 24: SPEAKING 1 -->
+            <section class="slide">
+                <h2 class="font-bold text-pop-gold tracking-widest uppercase text-sm mb-4 z-20 text-center">Track 24 • Speaking</h2>
+                <h1 class="text-5xl lg:text-7xl font-black font-display text-white mb-8 z-20 text-center italic">Podcast Studio</h1>
+                
+                <div class="flex flex-col lg:flex-row gap-8 items-stretch h-full min-h-[400px] w-full max-w-6xl z-20">
+                    <!-- Question Side -->
+                    <div class="flex-1 glass-panel p-10 rounded-[2.5rem] flex flex-col justify-center items-center text-center shadow-xl relative">
+                        <div class="w-20 h-20 bg-black rounded-full flex items-center justify-center border-2 border-pop-pink mb-8 absolute -top-10 shadow-[0_0_20px_rgba(236,72,153,0.4)]">
+                            <i class="fa-solid fa-microphone text-3xl text-pop-pink"></i>
+                        </div>
+                        <p class="text-4xl md:text-5xl font-black text-white leading-tight uppercase">What <span class="text-pop-pink">can</span> you do alone?</p>
+                    </div>
+
+                    <!-- Answer Side -->
+                    <div class="flex-1 bg-black/50 p-10 rounded-[2.5rem] border-4 border-dashed border-pop-pink/50 flex flex-col items-center justify-center text-center relative transition-colors duration-500" id="record-panel1">
+                        <span class="text-sm font-bold uppercase tracking-[0.2em] text-pop-pink mb-6"><i class="fa-solid fa-eye mr-2"></i> Read this out loud:</span>
+                        
+                        <div class="glass-panel p-8 rounded-3xl w-full mb-10 border border-white/5">
+                            <p class="text-2xl md:text-3xl font-bold text-white italic leading-relaxed">"I <span class="text-pop-pink">can buy myself flowers</span>, and I <span class="text-pop-pink">can dance</span> alone!"</p>
+                        </div>
+                        
+                        <button id="record-btn1" onclick="startRecord(1)" class="w-24 h-24 rounded-full bg-red-500 text-white flex items-center justify-center text-3xl shadow-[0_0_20px_rgba(239,68,68,0.5)] transition-all hover:scale-110 mb-4 border-4 border-red-400">
+                            <i class="fa-solid fa-microphone"></i>
+                        </button>
+                        <span id="record-text1" class="text-lg font-bold text-gray-400">Click to record</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 25: REVIEW & END -->
+            <section class="slide">
+                <div class="text-center z-20 flex flex-col items-center">
+                    <div class="w-48 h-48 lg:w-64 lg:h-64 bg-black rounded-full flex items-center justify-center border-[6px] border-pop-pink mb-10 shadow-[0_0_40px_rgba(236,72,153,0.4)]">
+                        <span class="text-pop-pink font-black font-display text-5xl lg:text-7xl italic">WOLFFY</span>
+                    </div>
+                    <h1 class="text-5xl lg:text-7xl font-black font-display text-white mb-6 italic">Class Dismissed</h1>
+                    <p class="text-2xl lg:text-3xl font-medium text-gray-300 mb-12">You mastered your independence. 🌸</p>
+                    <button onclick="goToSlide(0)" class="bg-pop-pink border border-pop-pink text-white font-bold text-xl px-16 py-5 rounded-full hover:bg-white hover:text-black transition-colors shadow-[0_0_15px_rgba(236,72,153,0.3)]">PLAY ENCORE</button>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- ================= FIXED BOTTOM DASHBOARD ================= -->
+    <footer class="fixed bottom-0 left-0 w-full h-[100px] lg:h-[120px] bg-[#0a0608] border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.8)] z-50 flex items-center justify-between px-4 lg:px-8">
+        
+        <!-- Left: Mini Turntable & LCD -->
+        <div class="flex items-center gap-4 lg:gap-6 w-1/3">
+            <div class="relative w-14 h-14 lg:w-20 lg:h-20 shrink-0">
+                <div id="vinyl-record" class="absolute inset-0 rounded-full bg-black shadow-[0_0_15px_rgba(236,72,153,0.3)] border-2 border-pop-pink/50 flex items-center justify-center overflow-hidden vinyl-spin">
+                    <img src="https://i1.sndcdn.com/artworks-YOSTbh90ESawTlzu-s9fROg-t500x500.jpg" class="w-full h-full object-cover opacity-90">
+                </div>
+            </div>
+            <div class="hidden lg:flex flex-col justify-center glass-panel border border-white/5 rounded-xl px-4 py-3 shadow-inner w-48">
+                <div class="flex justify-between items-center mb-1">
+                    <span class="text-pop-pink font-bold text-xs tracking-widest uppercase" id="lcd-text">TRK 01</span>
+                    <span class="text-pop-pink text-[10px]" id="lcd-time">0:00</span>
+                </div>
+                <div class="w-full bg-[#000] h-1.5 rounded-full overflow-hidden mb-1">
+                    <div id="lcd-progress" class="h-full bg-pop-pink w-0 transition-all duration-300 shadow-[0_0_5px_#EC4899]"></div>
+                </div>
+                <p class="text-white font-bold text-sm truncate uppercase">Flowers</p>
+            </div>
+        </div>
+
+        <!-- Center: Playback Controls -->
+        <div class="flex flex-col items-center justify-center gap-2 w-1/3">
+            <div class="flex items-center gap-4 lg:gap-8">
+                <button onclick="prevSlide()" id="btn-prev" class="chunky-btn p-3 rounded-full disabled:opacity-50 flex items-center justify-center text-white">
+                    <i class="fa-solid fa-backward-step"></i>
+                </button>
+                
+                <button onclick="togglePlayPause()" class="chunky-btn w-14 h-14 lg:w-16 lg:h-16 rounded-full border border-pop-pink flex items-center justify-center shadow-[0_0_15px_rgba(236,72,153,0.2)]">
+                    <i id="icon-play" class="fa-solid fa-play ml-1 hidden text-2xl text-pop-pink"></i>
+                    <i id="icon-pause" class="fa-solid fa-pause text-2xl text-pop-pink"></i>
+                </button>
+
+                <button onclick="nextSlide()" id="btn-next" class="chunky-btn p-3 rounded-full disabled:opacity-50 flex items-center justify-center text-white">
+                    <i class="fa-solid fa-forward-step"></i>
+                </button>
+            </div>
+            <span class="text-[10px] lg:text-xs text-gray-500 tracking-widest uppercase font-bold">WOLFFY powered by Wolf Labs</span>
+        </div>
+
+        <!-- Right: Tools -->
+        <div class="flex items-center justify-end gap-3 lg:gap-4 w-1/3">
+            <button onclick="toggleWhiteboard()" class="chunky-btn p-3 rounded-xl flex items-center justify-center group" title="Teacher Terminal">
+                <i class="fa-solid fa-pen-nib text-pop-pink text-lg group-active:scale-90 transition-transform"></i>
+            </button>
+            <button onclick="toggleDictSidebar()" class="chunky-btn p-3 rounded-xl flex items-center justify-center group" title="Smart Dictionary">
+                <i class="fa-solid fa-book text-pop-pink text-lg group-active:scale-90 transition-transform"></i>
+            </button>
+            <button onclick="toggleFullScreen()" class="chunky-btn p-3 rounded-xl hidden md:flex items-center justify-center group" title="Fullscreen">
+                <i class="fa-solid fa-expand text-white text-lg group-active:scale-90 transition-transform"></i>
+            </button>
+        </div>
+    </footer>
+
+    <!-- ================= SMART DICT (Right Panel) ================= -->
+    <aside id="dictPanel" class="fixed top-0 right-0 h-full w-full md:w-[400px] glass-panel border-l border-pop-pink/30 text-white z-[60] transform translate-x-full transition-transform duration-500 flex flex-col shadow-[-10px_0_30px_rgba(236,72,153,0.1)] pb-[120px]">
+        <div class="p-6 border-b border-white/10 flex justify-between items-center bg-black/40">
+            <h2 class="text-2xl font-black font-display text-white flex items-center gap-3 uppercase italic">
+                <i class="fa-solid fa-book text-pop-pink"></i> SMART DICT
+            </h2>
+            <button onclick="toggleDictSidebar(false)" class="text-gray-400 hover:text-white text-2xl"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="p-6 flex-1 overflow-y-auto hide-scroll" id="dict-content">
+            <div class="flex flex-col items-center justify-center h-full text-center opacity-50">
+                <i class="fa-solid fa-arrow-pointer text-5xl mb-6 text-pop-pink"></i>
+                <p class="text-xl">Double-click any english word to translate.</p>
+                <p class="mt-4 text-sm">Or type below:</p>
+                <input type="text" class="mt-2 bg-black border border-white/20 rounded-lg px-4 py-3 w-full text-center outline-none focus:border-pop-pink text-white" placeholder="> Type word + Enter" onkeypress="if(event.key === 'Enter') fetchDict(this.value)">
+            </div>
+        </div>
+    </aside>
+
+    <!-- ================= TEACHER TOOLS (Left Panel) ================= -->
+    <aside id="whiteboardPanel" class="fixed top-0 left-0 h-full w-full md:w-[450px] glass-panel border-r border-pop-gold text-white z-[60] transform -translate-x-full transition-transform duration-500 flex flex-col shadow-[10px_0_30px_rgba(251,191,36,0.1)] pb-[120px]">
+        <div class="p-6 border-b border-white/10 flex justify-between items-center bg-black/40">
+            <h2 class="text-2xl font-black font-display text-pop-gold uppercase tracking-widest italic">Teacher's Notes</h2>
+            <button onclick="toggleWhiteboard(false)" class="text-gray-400 hover:text-white text-2xl"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        
+        <div class="p-6 border-b border-white/10 bg-black/20">
+            <span class="text-xs font-bold text-gray-400 uppercase tracking-widest block mb-4">Praise Drops</span>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="triggerPraise('EXCELLENT! 🌸', 'Great grammar work!')" class="border border-pop-pink text-pop-pink font-bold py-3 rounded-xl text-sm hover:bg-pop-pink hover:text-black transition-colors">EXCELLENT!</button>
+                <button onclick="triggerPraise('BEAUTIFUL! ✨', 'You nailed it!')" class="border border-pop-gold text-pop-gold font-bold py-3 rounded-xl text-sm hover:bg-pop-gold hover:text-black transition-colors">BEAUTIFUL!</button>
+            </div>
+        </div>
+
+        <div class="flex-1 p-6 bg-black/30">
+            <textarea id="teacher-notepad" class="w-full h-full bg-transparent text-white text-lg outline-none resize-none leading-relaxed placeholder:text-gray-600" placeholder="> Write vocabulary, translations, and notes here..."></textarea>
+        </div>
+    </aside>
+
+    <!-- ================= PRAISE OVERLAY ================= -->
+    <div id="praise-overlay" class="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-300 bg-[#1a0b12]/90 backdrop-blur-sm">
+        <div id="praise-card" class="glass-panel border-4 border-pop-pink p-12 md:p-16 rounded-[3rem] text-center transform scale-50 transition-all duration-500 shadow-[0_0_50px_rgba(236,72,153,0.4)] flex flex-col items-center">
+            <h1 id="praise-main" class="text-6xl md:text-8xl font-black font-display text-white mb-6 tracking-tight uppercase italic">EXCELLENT!</h1>
+            <p id="praise-sub" class="text-xl md:text-2xl text-black bg-pop-pink px-6 py-2 rounded-full font-bold uppercase tracking-widest">Awesome job!</p>
+        </div>
+    </div>
+
+    <!-- ================= LYRIC INSIGHTS OVERLAY ================= -->
+    <div id="lyric-insight-overlay" class="fixed inset-0 z-[100] flex items-center justify-center bg-[#1a0b12]/90 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 p-4">
+        <div id="lyric-insight-card" class="glass-panel border border-pop-pink rounded-3xl p-8 lg:p-12 max-w-3xl w-full shadow-[0_0_50px_rgba(236,72,153,0.2)] transform scale-95 transition-transform duration-300 relative">
+            <button onclick="closeLyricInsight()" class="absolute top-6 right-6 text-pop-pink hover:text-white transition-colors bg-black border border-pop-pink w-10 h-10 rounded-full flex items-center justify-center hover:bg-pop-pink">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="mb-6"><span class="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest text-black bg-pop-pink">Grammar / Vocab</span></div>
+            <h2 id="insight-title" class="text-4xl font-black font-display text-white mb-6 uppercase italic">Title</h2>
+            <p id="insight-explanation" class="text-xl text-gray-300 leading-relaxed mb-10 border-l-4 border-pop-pink pl-6 bg-black/50 py-4 pr-4 rounded-r-xl">Exp</p>
+            <div class="bg-black/80 p-8 rounded-2xl border border-white/10">
+                <p id="insight-question" class="text-xl font-bold text-pop-pink mb-6">> Question?</p>
+                <div id="insight-options" class="flex flex-col gap-4"></div>
+                <div id="insight-feedback" class="hidden mt-8 text-center text-pop-gold font-black text-2xl animate-pulse font-display uppercase tracking-widest italic">Great Job! ✨</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= JAVASCRIPT ================= -->
+    <script>
+        // Sparkle generator for background
+        function createSparkles() {
+            const container = document.getElementById('sparkle-container');
+            if(!container) return;
+            for(let i=0; i<30; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.width = Math.random() * 4 + 2 + 'px';
+                sparkle.style.height = sparkle.style.width;
+                sparkle.style.left = Math.random() * 100 + 'vw';
+                sparkle.style.top = Math.random() * 100 + 'vh';
+                sparkle.style.animationDelay = Math.random() * 4 + 's';
+                sparkle.style.animationDuration = Math.random() * 3 + 2 + 's';
+                container.appendChild(sparkle);
+            }
+        }
+
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length; // 25 slides
+        let isPlaying = true;
+        let cardsFlipped = 0;
+
+        function init() { 
+            updateUI(); 
+            setupMem();
+            createSparkles();
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                slides[currentSlide].classList.remove('active');
+                currentSlide++;
+                slides[currentSlide].classList.add('active');
+                updateUI();
+                if(currentSlide === totalSlides - 1) shootConfetti();
+                scrollToTop();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                slides[currentSlide].classList.remove('active');
+                currentSlide--;
+                slides[currentSlide].classList.add('active');
+                updateUI();
+                scrollToTop();
+            }
+        }
+
+        function goToSlide(index) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = index;
+            slides[currentSlide].classList.add('active');
+            updateUI();
+            scrollToTop();
+        }
+
+        function scrollToTop() {
+            const screen = document.getElementById('slides-container');
+            if(screen) screen.scrollTop = 0;
+        }
+
+        function updateUI() {
+            document.getElementById('btn-prev').disabled = currentSlide === 0;
+            document.getElementById('btn-next').disabled = currentSlide === totalSlides - 1;
+            document.getElementById('lcd-text').innerText = `TRK ${(currentSlide + 1).toString().padStart(2, '0')}`;
+            
+            const progress = totalSlides > 1 ? (currentSlide / (totalSlides - 1)) * 100 : 0;
+            document.getElementById('lcd-progress').style.width = `${progress}%`;
+            
+            // Fake time calculation based on progress (song is roughly 3:20 -> 200s)
+            const totalSecs = 200; 
+            const curSecs = Math.floor((progress / 100) * totalSecs);
+            document.getElementById('lcd-time').innerText = `${Math.floor(curSecs/60)}:${(curSecs%60).toString().padStart(2,'0')}`;
+        }
+
+        function togglePlayPause() {
+            isPlaying = !isPlaying;
+            document.getElementById('icon-play').classList.toggle('hidden', isPlaying);
+            document.getElementById('icon-pause').classList.toggle('hidden', !isPlaying);
+            const vinyl = document.getElementById('vinyl-record');
+            if(vinyl) vinyl.classList.toggle('vinyl-paused', !isPlaying);
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(e=>console.log(e));
+            else if (document.exitFullscreen) document.exitFullscreen();
+        }
+
+        function toggleWhiteboard(forceState) {
+            const b = document.getElementById('whiteboardPanel');
+            if (forceState === false) b.classList.add('-translate-x-full');
+            else b.classList.toggle('-translate-x-full');
+        }
+
+        function toggleDictSidebar(forceState) {
+            const p = document.getElementById('dictPanel');
+            if (forceState === false) p.classList.add('translate-x-full');
+            else if (forceState === true) p.classList.remove('translate-x-full');
+            else p.classList.toggle('translate-x-full');
+        }
+
+        // Smart Dict
+        document.addEventListener('dblclick', async (e) => {
+            if(e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            const sel = window.getSelection().toString().trim();
+            if(sel && /^[A-Za-z]+$/.test(sel)) fetchDict(sel.toLowerCase());
+        });
+
+        async function fetchDict(word) {
+            if(!word) return;
+            toggleDictSidebar(true);
+            const content = document.getElementById('dict-content');
+            content.innerHTML = `<div class="flex flex-col items-center justify-center h-full text-pop-pink"><i class="fa-solid fa-spinner fa-spin text-4xl mb-4"></i><p>Searching Database...</p></div>`;
+            try {
+                const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+                const data = await res.json();
+                if(data.title) {
+                    content.innerHTML = `<div class="mt-10 text-center"><h3 class="text-3xl font-black text-white font-display uppercase italic">${word}</h3><p class="text-gray-400 mt-4">> Not found in memory.</p></div><input type="text" class="mt-8 bg-black border border-white/20 rounded-lg px-4 py-3 w-full outline-none text-white focus:border-pop-pink" placeholder="> Search another..." onkeypress="if(event.key === 'Enter') fetchDict(this.value)">`;
+                    return;
+                }
+                const entry = data[0];
+                const def = entry.meanings[0].definitions[0].definition;
+                content.innerHTML = `
+                    <div class="mt-6">
+                        <h3 class="text-4xl font-black text-pop-pink uppercase font-display italic">${entry.word}</h3>
+                        <p class="text-gray-400 mt-1">> ${entry.meanings[0].partOfSpeech}</p>
+                        <div class="mt-6 p-5 bg-black rounded-xl border border-white/10"><p class="text-white text-lg leading-relaxed">${def}</p></div>
+                    </div>
+                    <input type="text" class="mt-8 bg-black border border-white/20 rounded-lg px-4 py-3 w-full outline-none text-white focus:border-pop-pink" placeholder="> Search another..." onkeypress="if(event.key === 'Enter') fetchDict(this.value)">
+                `;
+            } catch(err) { content.innerHTML = `<p class="text-red-500 mt-10 text-center">> Error fetching data.</p>`; }
+        }
+
+        // MCQ
+        function selectMCQ(btn, type, hubId) {
+            const group = btn.closest('.options-group');
+            group.querySelectorAll('.mcq-btn').forEach(b => { b.classList.remove('border-pop-pink', 'bg-pop-pink/10', 'border-pop-gold', 'bg-pop-gold/10'); b.classList.add('glass-panel'); });
+            
+            const colorClass = (hubId === 'hub-track3' || hubId === 'hub-dr1' || hubId === 'hub-scen') ? 'pop-pink' : 'pop-gold';
+            
+            if(type === 'correct' || type === 'any') { 
+                btn.classList.remove('glass-panel'); 
+                btn.classList.add(`border-${colorClass}`, `bg-${colorClass}/10`); 
+                if(hubId) document.getElementById(hubId).classList.remove('hidden'); 
+                shootConfetti(); 
+            }
+            else { btn.classList.add('shake', 'border-red-500'); setTimeout(() => btn.classList.remove('shake','border-red-500'), 400); }
+        }
+
+        function checkSong(isLoud, el) {
+            const group = el.parentElement;
+            group.querySelectorAll('button').forEach(b => b.classList.remove('border-pop-gold', 'bg-pop-gold/10', 'border-blue-400', 'bg-blue-400/10'));
+            if(isLoud) {
+                el.classList.add('border-pop-gold', 'bg-pop-gold/10');
+                const fb = document.getElementById('listen-hub');
+                fb.classList.remove('hidden');
+                shootConfetti();
+            } else { el.classList.add('shake', 'border-red-500'); setTimeout(() => el.classList.remove('shake','border-red-500'), 400); }
+        }
+
+        // Pop Cards (Vocab)
+        function flipPopCard(el, english, def, q, stageId) {
+            if(!el.classList.contains('flipped')) {
+                el.classList.add('flipped');
+                el.querySelector('.c-word').innerText = english.toUpperCase();
+                el.querySelector('.c-def').innerText = def;
+            }
+            
+            const infoPanel = document.getElementById('cloud-info-' + stageId);
+            if(infoPanel) {
+                infoPanel.classList.remove('hidden');
+                document.getElementById('c-title-' + stageId).innerText = english;
+                document.getElementById('c-def-' + stageId).innerText = def;
+                document.getElementById('c-q-' + stageId).innerText = q;
+            }
+        }
+
+        // Tuner (Grammar Mixer)
+        let machineActive = false;
+        function toggleMachine() {
+            machineActive = !machineActive;
+            const track = document.querySelector('.toggle-switch');
+            const txtNormal = document.getElementById('text-reality');
+            const txtPower = document.getElementById('text-imagination');
+
+            if(machineActive) {
+                track.classList.add('active');
+                txtNormal.classList.add('opacity-0', 'scale-90', 'pointer-events-none');
+                txtNormal.classList.remove('translate-y-0');
+                txtPower.classList.remove('opacity-0', 'scale-90', 'pointer-events-none');
+                shootConfetti();
+            } else {
+                track.classList.remove('active');
+                txtNormal.classList.remove('opacity-0', 'scale-90', 'pointer-events-none');
+                txtNormal.classList.add('translate-y-0');
+                txtPower.classList.add('opacity-0', 'scale-90', 'pointer-events-none');
+            }
+        }
+
+        // Sentence Builder
+        let activeB = 1; const expectedT = {1:"can", 2:"hold", 3:"hand"};
+        function fillTape(btn, word) {
+            if(activeB > 3) return;
+            if(expectedT[activeB] === word) {
+                const b = document.getElementById(`t-blank${activeB}`);
+                if(b) { b.innerText = word.toUpperCase(); b.classList.add('filled'); }
+                btn.classList.add('used'); activeB++;
+                if(activeB > 3) { document.getElementById('tape-hub').classList.remove('hidden'); shootConfetti(); }
+            } else { btn.classList.add('shake', 'bg-red-500', 'text-white', 'border-red-500'); setTimeout(()=>btn.classList.remove('shake', 'bg-red-500', 'text-white', 'border-red-500'),400); }
+        }
+        function returnTape(n) {
+            const b = document.getElementById(`t-blank${n}`); 
+            if(!b) return;
+            const w = b.innerText; if(!w) return;
+            b.innerText = ""; b.classList.remove('filled'); 
+            document.querySelectorAll('.tape-piece').forEach(p => { if(p.innerText.toLowerCase() === w.toLowerCase()) p.classList.remove('used'); });
+            activeB = n; document.getElementById('tape-hub').classList.add('hidden');
+        }
+
+        // Memory Match Game
+        function setupMem() {
+            const grid = document.getElementById('mem-grid');
+            if(!grid) return;
+            const data = [{id:1,v:'Buy'},{id:1,v:'🛍️'},{id:2,v:'Write'},{id:2,v:'✍️'},{id:3,v:'Talk'},{id:3,v:'🗣️'},{id:4,v:'Hold'},{id:4,v:'🤝'}].sort(()=>0.5-Math.random());
+            grid.innerHTML = '';
+            data.forEach(d => {
+                const c = document.createElement('div');
+                c.className='memory-card'; c.dataset.id=d.id;
+                c.innerHTML=`<div class="memory-card-inner"><div class="memory-card-front"></div><div class="memory-card-back">${d.v}</div></div>`;
+                c.onclick=()=>flip(c);
+                grid.appendChild(c);
+            });
+        }
+        let f1, f2, lock=false, matches=0;
+        function flip(c) {
+            if(lock || c.classList.contains('flipped')) return;
+            c.classList.add('flipped');
+            if(!f1) { f1=c; return; } f2=c; lock=true;
+            if(f1.dataset.id===f2.dataset.id) { 
+                f1.classList.add('matched'); f2.classList.add('matched'); f1=f2=null; lock=false; matches++;
+                if(matches===4) { document.getElementById('mem-hub').classList.remove('hidden'); shootConfetti(); }
+            }
+            else { setTimeout(()=>{f1.classList.remove('flipped'); f2.classList.remove('flipped'); f1=f2=null; lock=false;}, 800); }
+        }
+
+        // Bamboozle
+        function rqCheck(n, c) {
+            if(c) { document.getElementById('rq'+n).classList.add('hidden'); if(n===1) document.getElementById('rq2').classList.remove('hidden'); else { document.getElementById('rq-hub').classList.remove('hidden'); shootConfetti(); } }
+            else { document.getElementById('rq'+n).classList.add('shake', 'border-red-500'); setTimeout(()=>document.getElementById('rq'+n).classList.remove('shake', 'border-red-500'),400); }
+        }
+        
+        // Odd One Out
+        function oddCheck(btn, isOdd) {
+            if(isOdd) {
+                btn.classList.add('border-pop-pink', 'text-pop-pink');
+                document.getElementById('odd-hub').classList.remove('hidden');
+                shootConfetti();
+            } else {
+                btn.classList.add('shake', 'border-red-500', 'text-red-500'); setTimeout(()=>btn.classList.remove('shake', 'border-red-500', 'text-red-500'),400);
+            }
+        }
+
+        // Speaking Studio
+        function startRecord(id) {
+            const btn = document.getElementById('record-btn' + id);
+            const txt = document.getElementById('record-text' + id);
+            const panel = document.getElementById('record-panel' + id);
+            
+            btn.classList.add('animate-pulse');
+            btn.classList.replace('text-white', 'text-black');
+            btn.classList.replace('bg-red-500', 'bg-pop-gold');
+            txt.innerText = "> RECORDING... (WAIT 3S)";
+            txt.classList.replace('text-gray-400', 'text-pop-gold');
+
+            setTimeout(() => {
+                btn.classList.remove('animate-pulse', 'bg-pop-gold', 'border-red-400');
+                btn.classList.add('bg-emerald-500', 'border-emerald-400', 'text-white');
+                btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+                
+                txt.innerText = "> AUDIO SYNC COMPLETE";
+                txt.classList.replace('text-pop-gold', 'text-emerald-400');
+                
+                panel.classList.remove('border-dashed', 'border-pop-pink/50');
+                panel.classList.add('border-solid', 'border-emerald-500', 'shadow-[0_0_30px_rgba(16,185,129,0.2)]');
+                shootConfetti();
+            }, 3000);
+        }
+
+        // Lyric Insights (Nível A1 Focado)
+        function openLyricInsight(k) {
+            const data = {
+                'can': {t:'Can', e:'To have the ability or independence to do something.', q:'Tell me something you can do well.', o:['I can sing.', 'I can\'t sing.']},
+                'buy': {t:'Buy', e:'To pay money to get something.', q:'What do you buy at the supermarket?', o:['Food.', 'Clothes.']},
+                'myself': {t:'Myself', e:'Used when you do the action to YOU.', q:'Do you study by yourself?', o:['Yes.', 'No, with friends.']},
+                'write': {t:'Write', e:'To make words with a pen or pencil.', q:'Do you write with a pen or a pencil?', o:['Pen.', 'Pencil.']},
+                'talk': {t:'Talk', e:'To speak words to someone.', q:'Who do you talk to every day?', o:['My friends.', 'My family.']},
+                'hold': {t:'Hold', e:'To take and keep something in your hands.', q:'What do you hold in your hand right now?', o:['My phone.', 'A mouse.']}
+            }[k];
+            if(!data) return;
+            document.getElementById('insight-title').innerText=data.t; document.getElementById('insight-explanation').innerText=data.e; document.getElementById('insight-question').innerText=data.q;
+            const con = document.getElementById('insight-options'); con.innerHTML='';
+            data.o.forEach(o => { const b=document.createElement('button'); b.className='bg-black p-4 rounded-xl text-left font-bold text-xl hover:bg-pop-gold hover:text-black transition-colors border border-white/20 text-white'; b.innerText=o; b.onclick=()=>document.getElementById('insight-feedback').classList.remove('hidden'); con.appendChild(b); });
+            document.getElementById('insight-feedback').classList.add('hidden');
+            const overlay = document.getElementById('lyric-insight-overlay');
+            const card = document.getElementById('lyric-insight-card');
+            overlay.classList.remove('opacity-0','pointer-events-none');
+            setTimeout(() => card.classList.replace('scale-95', 'scale-100'), 50);
+        }
+
+        function closeLyricInsight() { 
+            const overlay = document.getElementById('lyric-insight-overlay');
+            const card = document.getElementById('lyric-insight-card');
+            card.classList.replace('scale-100', 'scale-95');
+            setTimeout(() => overlay.classList.add('opacity-0', 'pointer-events-none'), 200);
+        }
+
+        // Praise Overlay
+        function triggerPraise(main, sub) {
+            toggleWhiteboard(false);
+            const overlay = document.getElementById('praise-overlay');
+            const card = document.getElementById('praise-card');
+            document.getElementById('praise-main').innerText = main;
+            document.getElementById('praise-sub').innerText = sub;
+            overlay.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => card.classList.replace('scale-50', 'scale-100'), 50);
+            shootConfetti();
+            setTimeout(() => { card.classList.replace('scale-100', 'scale-50'); overlay.classList.add('opacity-0', 'pointer-events-none'); }, 2500); 
+        }
+
+        function shootConfetti() {
+            const colors = ['#EC4899', '#FBBF24', '#ffffff'];
+            for(let i=0; i<80; i++) {
+                const c = document.createElement('div'); c.className='confetti';
+                c.style.left = Math.random()*100+'vw'; c.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+                c.style.animation = `fall ${Math.random()*3+2}s linear forwards`;
+                document.body.appendChild(c); setTimeout(()=>c.remove(), 4000);
+            }
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
